@@ -6,8 +6,13 @@ __lua__
 dbg=''
 
 -- position players
-x=60
-y=40
+original_x=60
+original_y=40
+x=original_x
+y=original_y
+
+stone_color=5
+dirt_color=4
 
 game_states={
 	start=1,
@@ -17,6 +22,8 @@ game_states={
 }
 --default countdown
 dfcd=18
+victory_time=dfcd
+victory_best=victory_time
 --score set to 0 by default to all players
 score=0
 game_state=game_states.start
@@ -25,15 +32,25 @@ health=8
 health_p2=health
 direction=1
 direction_p2=-1
+
+--golden salad
+direction_gs=0
+gs_direction_tick=0
+speed_gs=0.5
+
 weskargool=8
 heskargool=8
 sprchange=0
 sprchange_p2=0
-salad_t1=19
-salad_t2=20
-salad_t3=21
-salad_t4=32
-salad_t5=48
+salad_t1={1,19}
+salad_t2={2,20}
+salad_t3={3,21}
+salad_t4={4,50}
+salad_t5={5,49}
+salad_t6={6,48} -- randomise one
+salad_t7={7,16}
+salad_t8={8,51}
+salad_t9={9,32}
 nb_player=-1
 saladsprite= {
 	salad_t1,
@@ -41,6 +58,10 @@ saladsprite= {
 	salad_t3,
 	salad_t4,
 	salad_t5,
+	salad_t6,
+	salad_t7,
+	salad_t8,
+	salad_t9,
 }
 ratio_salads_default={
 	salads={
@@ -48,11 +69,18 @@ ratio_salads_default={
 			t2=1,
 			t3=2,
 			t4=0,
-			t5=1,
+			t5=0,
+			t6=1,
+			t7=1,
+			t8=0,
+			t9=0,
 	}
 }
 list_salads=ratio_salads_default
 salads={}
+
+bave={}
+bave_p2={}
 
 dying_sprites={17,18,33,34,35,36,37}
 dying_sprites_p2={44,45,46,60,61,36,37}
@@ -107,15 +135,21 @@ campaign={
 	},
  {
 		tp='game',
+		ttl='1/12',
 		goal=5,
 		timeout=30,
+		bg={5,4},
 		musik=11,
 		salads={
 			t1=5,
 			t2=0,
 			t3=0,
 			t4=0,
-			t5=0
+			t5=0,
+			t6=0,
+			t7=0,
+			t8=0,
+			t9=0,
 		}
 	},
 	{
@@ -148,6 +182,8 @@ campaign={
  {
 		tp='game',
 		goal=10,
+		ttl='2/12',
+		bg={4,5},
 		timeout=20,
 		musik=10,
 		salads={
@@ -155,7 +191,11 @@ campaign={
 			t2=5,
 			t3=0,
 			t4=0,
-			t5=0
+			t5=0,
+			t6=0,
+			t7=0,
+			t8=0,
+			t9=0,
 		}
 	},
 	{
@@ -168,7 +208,7 @@ campaign={
 			{'this salad kill you...',10,80,7},
 			{'and slow down your snail...',10,86,7},
 			{'but...',10,92,7},
-			{'allow to gain two points!',10,98,7}	
+			{'allow to gain two points!',10,98,7}
 		},
 		pics={
 			{21,20,35,1,1,false,false},
@@ -186,16 +226,22 @@ campaign={
 	},
 	{
 		tp='game',
+		ttl='3/12',
 		goal=6,
 		timeout=5,
 		musik=12,
+		bg={2,4},
 		fastness=0.7,
 		salads={
 			t1=0,
 			t2=0,
 			t3=10,
 			t4=0,
-			t5=0
+			t5=0,
+			t6=0,
+			t7=0,
+			t8=0,
+			t9=0,
 		}
 	},
 	{
@@ -224,6 +270,8 @@ campaign={
 	},
 	{
 		tp='game',
+		ttl='4/12',
+		bg={5,3},
 		goal=20,
 		timeout=20,
 		musik=15,
@@ -232,7 +280,11 @@ campaign={
 			t2=8,
 			t3=5,
 			t4=0,
-			t5=0
+			t5=0,
+			t6=0,
+			t7=0,
+			t8=0,
+			t9=0,
 		}
 	},
 	{
@@ -251,7 +303,9 @@ campaign={
 	},
 	{
 		tp='game',
+		ttl='5/12',
 		goal=10,
+		bg={4,3},
 		timeout=20,
 		musik=5,
 		salads={
@@ -259,7 +313,11 @@ campaign={
 			t2=1,
 			t3=2,
 			t4=0,
-			t5=0
+			t5=0,
+			t6=0,
+			t7=0,
+			t8=0,
+			t9=0,
 		}
 	},
 	{
@@ -267,7 +325,7 @@ campaign={
 		txt={
 			{'let\'s continue with',31,20,7},
 			{'a new salad!',31,26,7},
-			{'the golden salad!',31,42,10},
+			{'the orange salad!',31,42,10},
 			{'this one give you',31,90,7},
 			{'some extra time!',31,96,7},
 			{'+',42,67,10},
@@ -276,22 +334,70 @@ campaign={
 		},
 		pics={
 			{1,30,65,1,1},
-			{32,50,65,1,1},
+			{50,50,65,1,1},
 			{29,70,65,1,1},
 			{14,85,65,1,1},
 		}
 	},
 	{
 		tp='game',
+		ttl='6/12',
 		goal=10,
 		timeout=6,
-		musik=5,
+		bg={3,1},
+		musik=18,
 		salads={
 			t1=3,
 			t2=2,
 			t3=3,
 			t4=3,
 			t5=0,
+			t6=0,
+			t7=0,
+			t8=0,
+			t9=0,
+		}
+	},
+	{
+		tp='explanation',
+		txt={
+			{'each bonus have',31,15,7},
+			{'its nemesis!',31,21,7},
+			{'this red salad',31,35,7},
+			{'remove time!',31,41,7},
+			{'+',42,57,0},
+			{'-',95,57,0},
+			{'-',100,57,0},
+			{'but there is',31,75,7},
+			{'an extra power',31,81,7},
+			{'with this salad...',31,87,7},
+			{'it give a lot',31,93,7},
+			{'of speed!',31,99,7}
+		},
+		pics={
+			{1,30,55,1,1},
+			{49,50,55,1,1},
+			{29,70,55,1,1},
+			{14,85,55,1,1},
+		}
+	},
+	{
+		tp='game',
+		ttl='7/12',
+		goal=12,
+		timeout=20,
+		bg={13,5},
+		musik=19,
+		salads={
+			t1=5,
+			t2=0,
+			t3=2,
+			t4=0,
+			t5=1,
+			t6=0,
+			t7=0,
+			t8=0,
+			t9=0,
 		}
 	},
 	{
@@ -300,7 +406,7 @@ campaign={
 			{'you master!',21,20,7},
 			{'this time, no help!',21,26,7},
 			{'try to guess what',21,84,7},
-			{'the purple salad do!',21,90,7},
+			{'the purple salad does!',21,90,7},
 			{'?',25, 40,13},
 			{'?',105,75,13},
 			{'?',30,	67,13},
@@ -320,27 +426,208 @@ campaign={
 	},
 	{
 		tp='game',
+		ttl='8/12',
 		goal=5,
-		timeout=10,
-		musik=5,
+		timeout=13,
+		bg={5,1},
+		musik=20,
 		salads={
 			t1=5,
 			t2=1,
 			t3=2,
 			t4=0,
-			t5=1,
+			t5=0,
+			t6=1,
+			t7=0,
+			t8=0,
+			t9=0,
 		}
 	},
 	{
 		tp='explanation',
 		txt={
-			{'you solved a lot',21,20,7},
-			{'of mystery until now!',21,26,7},
+			{'adventure continue!',31,15,7},
+			{'another strange',31,21,7},
+			{'salad appear',31,27,7},
+			{'in the garden...',31,33,7},
+			{'+',42,57,0},
+			{'?',95,57,0},
+			{'it smell good',31,75,7},
+			{'so that must',31,81,7},
+			{'give some',31,87,7},
+			{'points... but',31,93,7},
+			{'why grey?',31,99,7}
 		},
 		pics={
-			{1,30,65,1,1},
+			{1,30,54,1,1},
+			{16,50,55,1,1},
+			{29,70,55,1,1},
+			{14,85,55,1,1},
 		}
 	},
+	{
+		tp='game',
+		ttl='9/12',
+		goal=10,
+		bg={4,2},
+		timeout=20,
+		musik=21,
+		salads={
+			t1=0,
+			t2=0,
+			t3=2,
+			t4=2,
+			t5=2,
+			t6=0,
+			t7=2,
+			t8=0,
+			t9=0,
+		}
+	},
+	{
+		tp='explanation',
+		txt={
+			{'you allmost reach',21,15,0},
+			{'the mysterious golden',21,21,0},
+			{'salad!',21,27,0},
+			{'but before there is',21,35,0},
+			{'a strange white salad...',21,41,0},
+			{'+',32,57,0},
+			{'+',95,57,0},
+			{'it give you some extra',21,75,0},
+			{'points but also some',21,81,0},
+			{'extra speed!',21,87,0},
+			{'but it is maybe',21,95,0},
+			{'dangerous!',21,101,0},
+		},
+		pics={
+			{1,20,55,1,1},
+			{51,40,55,1,1},
+			{29,65,55,1,1},
+			{47,100,55,1,1},
+			{14,85,55,1,1},
+		}
+	},
+	{
+		tp='game',
+		ttl='10/12',
+		goal=10,
+		timeout=16,
+		bg={4,5},
+		musik=22,
+		salads={
+			t1=3,
+			t2=0,
+			t3=0,
+			t4=0,
+			t5=0,
+			t6=0,
+			t7=0,
+			t8=3,
+			t9=0,
+		}
+	},
+	{
+		tp='explanation',
+		txt={
+			{'before the last round',21,15,7},
+			{'with the famous,',21,21,7},
+			{'golden salad, let do',21,27,7},
+			{'a last training',21,33,7},
+			{'',21,41,0},
+		},
+		pics={
+			{19,25,60,1,1},
+			{20,35,65,1,1},
+			{21,45,60,1,1},
+			{50,55,65,1,1},
+			{49,65,60,1,1},
+			{48,75,65,1,1},
+			{16,85,60,1,1},
+			{51,95,65,1,1},
+		}
+	},
+	{
+		tp='game',
+		ttl='11/12',
+		bg={5,4},
+		goal=10,
+		timeout=18,
+		musik=25,
+		salads={
+			t1=1,
+			t2=1,
+			t3=1,
+			t4=1,
+			t5=1,
+			t6=1,
+			t7=1,
+			t8=1,
+			t9=0,
+		}
+	},
+	{
+		tp='explanation',
+		txt={
+			{'you finally get it!',21,15,9},
+			{'it smell delicious,',21,21,9},
+			{'the golden salad is',21,27,9},
+			{'there!',21,33,9},
+			{'',21,41,0},
+		},
+		pics={
+			{32,61,66,1,1},
+			{15,50,50,1,1},
+			{15,70,70,1,1},
+			{15,80,75,1,1},
+			{15,80,45,1,1},
+			{15,40,80,1,1},	
+		}
+	},
+	{
+		tp='game',
+		ttl='12/12',
+		goal=30,
+		bg={1,2},
+		timeout=20,
+		musik=23,
+		salads={
+			t1=0,
+			t2=0,
+			t3=0,
+			t4=0,
+			t5=0,
+			t6=0,
+			t7=0,
+			t8=0,
+			t9=1,
+		}
+	},
+	{
+		tp='explanation',
+		txt={
+			{'you know all the',20,41,7},
+			{'secrets! keep hard',20,48,7},
+			{'training, a perfect',20,55,7},
+			{'control of eskargool',20,62,7},
+			{'is an infinite work!',20,69,7},
+		},
+		pics={
+			{64,26,10,10,4},
+			{19,20,80,1,1},
+			{20,30,80,1,1},
+			{21,40,80,1,1},
+			{50,50,80,1,1},
+			{49,60,80,1,1},
+			{48,70,80,1,1},
+			{16,80,80,1,1},
+			{51,90,80,1,1},
+			{32,100,80,1,1},
+		}
+	},
+	{
+		tp='end'
+	}
 }
 
 
@@ -357,7 +644,7 @@ function get_rand_position()
 
 	--check collision with second player
 	if (
-		nb_player==1 and 
+		nb_player==1 and
 		init_pos_s1==false
 	)
 	then
@@ -373,9 +660,9 @@ function get_rand_position()
 
 	--if position dont touch any player, return it
 	--boolcollis = collision_check(x_p2,y_p2,75,46)
-	
+
 	if (
-		init_pos_s1==false and 
+		init_pos_s1==false and
 		init_pos_s2==false
 	)
 	then
@@ -384,7 +671,7 @@ function get_rand_position()
 		--return {0,0}
 		return get_rand_position()
 	end
-	
+
 end
 
 function add_salad(stype)
@@ -400,6 +687,40 @@ function add_salad(stype)
 		})
 	end
 
+end
+
+function generate_bave()
+		color_bave=15
+		if(health<8)then color_bave=8 end
+		if direction<0 then
+			start_bave=x+7
+		else
+			start_bave=x
+		end
+		if(flr(rnd(5))==1) then
+			add(bave,{
+				flr(start_bave+rnd(3)),
+				flr(y+5+rnd(4)),
+				color_bave
+			})
+		end
+end
+
+function generate_bave_p2()
+		color_bave_p2=13
+			if(health_p2<8)then color_bave_p2=8 end
+		if direction_p2<0 then
+			start_bave_p2=x_p2+7
+		else
+			start_bave_p2=x_p2
+		end
+		if(flr(rnd(5))==1) then
+			add(bave_p2,{
+				flr(start_bave_p2+rnd(3)),
+				flr(y_p2+5+rnd(4)),
+				color_bave_p2
+			})
+		end
 end
 
 function move(instance,xdiff,ydiff)
@@ -420,6 +741,7 @@ function move(instance,xdiff,ydiff)
 		if y<0	then
 			y=0
 		end
+		generate_bave()
 	end
 	--if player 2
 	if(instance=='p2') then
@@ -439,6 +761,7 @@ function move(instance,xdiff,ydiff)
 		if y_p2<0	then
 			y_p2=0
 		end
+		generate_bave_p2()
 	end
 
 end
@@ -488,7 +811,7 @@ function dying_framerate()
 				sfx(4)
 				player_dead=2
 				return 'died'
-			end		
+			end
 		end
 end
 
@@ -497,18 +820,33 @@ function move_commands()
 	local d=0
 	local d2=0
 	--move player1
-	if (btn(0,0)) d=-speed
-	if (btn(1,0)) d=speed
-	if (btn(2,0)) move('p1',0,-speed)
-	if (btn(3,0)) move('p1',0,speed)
+	if switch_control==false then
+		if (btn(0,0)) d=-speed
+		if (btn(1,0)) d=speed
+		if (btn(2,0)) move('p1',0,-speed)
+		if (btn(3,0)) move('p1',0,speed)
+	else
+		if (btn(0,0)) d=speed
+		if (btn(1,0)) d=-speed
+		if (btn(2,0)) move('p1',0,speed)
+		if (btn(3,0)) move('p1',0,-speed)	
+	end
+
 	--move player2
 	if(nb_player==1) then
-		if (btn(0,1)) d2=-speed_p2
-		if (btn(1,1)) d2=speed_p2
-		if (btn(2,1)) move('p2',0,-speed_p2)
-		if (btn(3,1)) move('p2',0,speed_p2)
+		if(switch_control_p2==false)then
+			if (btn(0,1)) d2=-speed_p2
+			if (btn(1,1)) d2=speed_p2
+			if (btn(2,1)) move('p2',0,-speed_p2)
+			if (btn(3,1)) move('p2',0,speed_p2)
+		else
+			if (btn(0,1)) d2=speed_p2
+			if (btn(1,1)) d2=-speed_p2
+			if (btn(2,1)) move('p2',0,speed_p2)
+			if (btn(3,1)) move('p2',0,-speed_p2)
+		end
 	end
-	
+
 	if d!=0 then
 		direction = d
 		move('p1',direction,0)
@@ -530,7 +868,7 @@ function c_down()
 				microtick=frequency
 			end
 		end
-		
+
 		if countdown==0 then
 			if(nb_player==1) then
 				sfx(-1)
@@ -542,7 +880,7 @@ function c_down()
 			end
 			countdown=-1
 		end
-		
+
 		if countdown==-1 then
 			return 'game_end'
 		end
@@ -564,23 +902,23 @@ function _update60()
 	if (game_state==game_states.play) then
 
 		trigger_die = c_down()
-		
-		--manage death :.( 
+
+		--manage death :.(
 		if(dying_framerate()=='died') then
 			game_state=game_states.gameover
-		end 
-	
+		end
+
 		move_commands()
-		
+
 		if(trigger_die=='game_end') then
 			game_state=game_states.gameover
 		end
 
 		--if eskargool is dead, you can reinit to 10
 		init_anim_sprite()
-		
+
 		touch_salad()
-	
+
 	end
 
 end
@@ -606,12 +944,42 @@ function event_eat_4()
 end
 
 function event_eat_5()
-	--add_salad(5)
+	add_salad(5)
 	sfx(17)
 end
 
+function event_eat_6()
+	--random salad, dont need to remove anything
+	sfx(17)
+end
+
+function event_eat_7()
+	add_salad(7)
+	sfx(7)
+	if color_blind==true then
+		color_blind=false
+	else
+		color_blind=true
+	end
+end
+
+function event_eat_8()
+	add_salad(8)
+	sfx(17)
+end
+
+function event_eat_9()
+	countdown+=2
+	add_salad(9)
+	add_salad(1)
+	add_salad(1)
+	add_salad(2)
+	add_salad(3)
+	sfx(24)
+end
+
 function eat_s_4(collisioned,salad)
-	if collisioned==salad_t4 then
+	if collisioned==4 then
 		del(salads,salad)
 		event_eat_4()
 		countdown+=2
@@ -624,21 +992,27 @@ function clean_up_salads()
 	end
 end
 
+function clear_bave()
+	for particle in pairs (bave) do
+  bave[particle] = nil
+	end
+end
+
 function collision_p1(salads, salad)
-			if salad[3]==salad_t1 then
+			if salad[3][1]==1 then
 			 del(salads,salad)
 			 event_eat_1()
 			 sc_p1+=1
 			end
 			--blue salad speed up and heal
-			if salad[3]==salad_t2 then
+			if salad[3][1]==2 then
 			 del(salads,salad)
 			 event_eat_2()
 			 health=8
 			 speed+=0.1
 			end
 			-- salad killing you
-			if salad[3]==salad_t3 then
+			if salad[3][1]==3 then
 				del(salads,salad)
 				event_eat_3()
 			 health-=1
@@ -646,14 +1020,48 @@ function collision_p1(salads, salad)
 			 speed-=0.1
 			end
 			-- salad gaining time
-			eat_s_4(salad[3],salad)
-	
+			eat_s_4(salad[3][1],salad)
+
+			-- salad rmeove time
+			if salad[3][1]==5 then
+				event_eat_5()
+				del(salads,salad)
+				speed+=0.3
+				countdown-=2
+			end
+
 			-- salad randoming
-			if salad[3]==salad_t5 then
+			if salad[3][1]==6 then
 				clean_up_salads()
 				draw_salads()
+				event_eat_6()
 				set_salads(list_salads)
-				event_eat_5()
+			end
+
+			if salad[3][1]==7 then
+				del(salads,salad)
+				event_eat_7()
+				sc_p1+=1
+			end
+			
+			if salad[3][1]==8 then
+				del(salads,salad)
+				event_eat_8()
+				sc_p1+=1
+				speed+=0.1
+				if(switch_control==false) then
+					switch_control=true
+				else
+					switch_control=false
+				end
+			end
+
+			if salad[3][1]==9 then
+				del(salads,salad)
+				event_eat_9()
+				health_p2=8
+				sc_p1+=1
+				speed+=0.1
 			end
 
 			if sc_p1>=goal then
@@ -664,20 +1072,20 @@ function collision_p1(salads, salad)
 end
 
 function collision_p2(salads, salad)
-			if salad[3]==salad_t1 then
+			if salad[3][1]==1 then
 			 del(salads,salad)
 			 event_eat_1()
 			 sc_p2+=1
 			end
 			--blue salad speed up and heal
-			if salad[3]==salad_t2 then
+			if salad[3][1]==2 then
 			 del(salads,salad)
 			 event_eat_2()
 			 health_p2=8
 			 speed_p2+=0.1
 			end
 			-- salad killing you
-			if salad[3]==salad_t3 then
+			if salad[3][1]==3 then
 			 del(salads,salad)
 			 event_eat_3()
 			 health_p2-=1
@@ -685,7 +1093,49 @@ function collision_p2(salads, salad)
 			 speed_p2-=0.1
 			end
 
-			eat_s_4(salad[3],salad)
+			eat_s_4(salad[3][1],salad)
+
+			-- salad randoming
+			if salad[3][1]==5 then
+				event_eat_5()
+				del(salads,salad)
+				speed_p2+=0.3
+				countdown-=2
+			end
+
+			-- salad randoming
+			if salad[3][1]==6 then
+				clean_up_salads()
+				draw_salads()
+				set_salads(list_salads)
+				event_eat_6()
+			end
+
+			if salad[3][1]==7 then
+				del(salads,salad)
+				event_eat_7()
+				sc_p2+=1
+			end
+
+			if salad[3][1]==8 then
+				del(salads,salad)
+				event_eat_8()
+				sc_p2+=1
+				speed+=0.1
+				if(switch_control_p2==false) then
+					switch_control_p2=true
+				else
+					switch_control_p2=false
+				end
+			end
+
+			if salad[3][1]==9 then
+				del(salads,salad)
+				event_eat_9()
+				health_p2=8
+				sc_p2+=1
+				speed+=0.1
+			end
 
 			if sc_p2>=goal then
 				sfx(-1)
@@ -697,6 +1147,11 @@ end
 function manage_victory()
 	--classical mod
 	if game_state==game_states.play then
+		--stock time
+		victory_time=dfcd-countdown
+		if (victory_best>victory_time) then
+			victory_best=victory_time
+		end
 	 game_state=game_states.win
 	end
 	--campaign mod
@@ -708,7 +1163,7 @@ end
 
 function touch_salad()
 	for salad in all(salads) do
-	
+
 	 --collision player 1
 	 local collision =	collision_check(
 		 x,
@@ -723,7 +1178,7 @@ function touch_salad()
 		--collision player 2
 		if(nb_player==1) then
 	 	local collision_bool =	collision_check(
-			 x_p2,
+			x_p2,
 	 		y_p2,
 	 		salad[1],
 	 		salad[2]
@@ -738,13 +1193,65 @@ function touch_salad()
 end
 
 function draw_salads()
+	local loop_tmp=0
+	local	sprite_number=16
 	for salad in all(salads) do
-		spr(salad[3], salad[1], salad[2])
+		loop_tmp+=1
+		if color_blind==false then
+			sprite_number=salad[3][2]
+		end
+		--golden salad moving
+		
+		if salad[3][1]==9 then
+		
+			gs_direction_tick+=1
+			if(gs_direction_tick>80) then
+				direction_gs=flr(rnd(8))
+				gs_direction_tick=0
+			end
+			
+			if (direction_gs==0) then
+				--boost countdown
+				gs_direction_tick+=2
+			elseif direction_gs==1 then
+				salad[1]+=speed_gs
+			elseif direction_gs==2 then
+				salad[1]-=speed_gs
+			elseif direction_gs==3 then
+				salad[2]+=speed_gs
+			elseif direction_gs==4 then
+				salad[2]-=speed_gs
+			elseif direction_gs==5 then
+				salad[1]+=speed_gs
+				salad[2]+=speed_gs
+			elseif direction_gs==6 then
+				salad[1]-=speed_gs
+				salad[2]-=speed_gs
+			elseif direction_gs==7 then
+				salad[1]+=speed_gs
+				salad[2]-=speed_gs
+			elseif direction_gs==8 then
+				salad[1]-=speed_gs
+				salad[2]+=speed_gs
+			end
+			
+			if salad[1]<0 then salad[1]=120 end
+			if salad[1]>120 then salad[1]=0 end
+			if salad[2]>105 then salad[2]=0 end
+			if salad[2]<0 then salad[2]=105 end
+						
+		end
+		
+		spr(sprite_number, salad[1], salad[2])		
 	end
 end
 
 function set_campaign()
 	music(0)
+	clean_up_salads()
+	color_blind=false
+	switch_control=false
+	switch_control_p2=false
 	player_dead=0
 end
 
@@ -752,6 +1259,11 @@ function _init()
 
 	music(0)
 
+	clear_bave()
+
+	color_blind=false
+	switch_control=false
+	switch_control_p2=false
 	player_dead=0
 	score=0
 	goal=10
@@ -779,10 +1291,10 @@ function _init()
 	end
 
 	--add salad on board
-
 	add_decor()
 
 	clean_up_salads()
+	list_salads=ratio_salads_default
 
 	health=8
 	health_p2=health
@@ -807,6 +1319,18 @@ function set_salads(obj)
 	for i=1,obj.salads.t5 do
 		add_salad(5)
 	end
+	for i=1,obj.salads.t6 do
+		add_salad(6)
+	end
+	for i=1,obj.salads.t7 do
+		add_salad(7)
+	end
+	for i=1,obj.salads.t8 do
+		add_salad(8)
+	end
+	for i=1,obj.salads.t9 do
+		add_salad(9)
+	end
 end
 
 function add_decor()
@@ -829,28 +1353,28 @@ function collision_check(x1,y1,x2,y2)
 	return true
 end
 
-function draw_bg_board()
-	rectfill(0,0,130,110,4)
+function draw_bg_board(fg,bg)
+	rectfill(0,0,130,110,bg)
 	for stone in all(stones) do
 		pset(
 			stone[1],
 			stone[2],
-			5
+			fg
 		)
 	end
-	
+
 	local sprite_grass={52,53}
 	local symetry={true,false}
-	
+
 	palt(14,true)
 	palt(0,false)
-	
+
 	local iter=0
 	for herb in all(grass) do
 		spr(
 			sprite_grass[herb[1]],
 			iter*8,
-			104, 
+			104,
 			1,
 			1,
 			symetry[herb[2]],
@@ -859,7 +1383,7 @@ function draw_bg_board()
 		iter+=1
 	end
 	palt(14,false)
-	palt(0,true)	
+	palt(0,true)
 end
 
 function draw_eskargool(sprindex)
@@ -872,13 +1396,33 @@ function draw_eskargool(sprindex)
 	return sprindex
 end
 
+function draw_bave()
+
+	if count(bave)>100 then
+		del(bave, bave[flr(rnd(30))])
+	end
+	for particle in all(bave) do
+  pset(particle[1],particle[2],particle[3])
+	end
+
+	if nb_player==1 then
+		if count(bave_p2)>100 then
+			del(bave_p2, bave_p2[flr(rnd(30))])
+		end
+		for particle_p2 in all(bave_p2) do
+	  pset(particle_p2[1],particle_p2[2],particle_p2[3])
+		end		
+	end
+
+end
+
 function draw_game()
 
 	local sprindex=1
 	local sprindex_p2=4
-	
+
 	sprindex=draw_eskargool(sprindex)
-	
+
 	--animation death player 2
 	if nb_player==1 then
 		if health_p2<8 then
@@ -889,57 +1433,106 @@ function draw_game()
 	end
 
 	--background
-	draw_bg_board()
+	draw_bg_board(
+		stone_color,
+		dirt_color
+	)
 
-	--map(0,0 , 1,1, 16,14)
+
+	draw_bave()
+
 	draw_salads()
+
 	spr(sprindex,x,y,1,1,direction<0)
 	print(sc_p1..'/10',2,115,10)
+	
+	--square life
+	life=0 while life<10 do
+		life+=1
+		if life<=sc_p1 then
+			rectfill(14+(life*4),114,16+(life*4),119,10)
+		else
+			rect(14+(life*4),114,16+(life*4),119,6)
+		end
+	end
 
 	--if two players
 	if(nb_player==1) then
 		spr(sprindex_p2,x_p2,y_p2,1,1,direction_p2<0)
 		print(sc_p2..'/10',110,115,2)
+		
+		--square life
+		life_p2=0 while life_p2<10 do
+			life_p2+=1
+			if life_p2<=sc_p2 then
+				rectfill(110-(life_p2*4),114,108-(life_p2*4),119,14)
+			else
+				rect(110-(life_p2*4),114,108-(life_p2*4),119,6)
+			end
+		end
 	end
-	
-	draw_cd()	
+
+	draw_cd()
 end
 
 function display_txt(i)
 	for tx in all(campaign[i].txt) do
 		print(tx[1],tx[2],tx[3],tx[4])
-	end	
+	end
 end
 
 function display_pics(i)
 	for pic in all(campaign[i].pics) do
 		--spr(n,x,y,w,h,flipx,flipy)
 		spr(pic[1],pic[2],pic[3],pic[4],pic[5],pic[6],pic[7])
-	end	
+	end
 end
 
 function specificities_cp(i)
-	--display a false loading band	
+	--display a false loading band
 	if (i==1) then
 		circfill(63,79,20,4)
 	end
-	
+
 	if (i==2) then
 		rectfill(10,30,118,50,4)
 		rectfill(10,79,118,100,0)
 		rectfill(25,92,100,96,11)
 	end
-	
+
 	if(i==4) then
 		rectfill(10,45,118,83,4)
 	end
-	
+
 	if(i==6) then
 		rectfill(10,35,118,60,4)
 	end
-	
+
 	if(i==10) then
 		rectfill(10,55,118,100,4)
+	end
+
+	if(i==20) then
+		rectfill(10,10,118,50,6)
+		rectfill(10,70,118,108,6)
+	end
+
+	if(i==22) then
+		rectfill(10,50,118,90,4)
+	end
+
+	if(i==24) then
+		circfill(64,73,36,11)
+		circfill(64,70,25,10)
+		circfill(64,70,20,15)
+		circfill(64,70,10,7)
+	end
+
+	if(i==26) then
+		rectfill(10,111,120,120,11)
+		
+		print3d('return to home with (x)',20,113,6,7)
+		line(20,120,110,120,7)
 	end
 
 end
@@ -957,15 +1550,14 @@ function draw_explanation(i)
 	--border
 	rect(5,5,123,123,0)
 
-	specificities_cp(i)
-	display_txt(i)
-	display_pics(i)
-
 	spr(13,40,113)
 	print3d('skip/next with (x)',47,113,6,7)
 	line(47,120,117,120,7)
 
-	
+	specificities_cp(i)
+	display_txt(i)
+	display_pics(i)
+
 	if	(rdy_nxt==true)then
 		if	(btnp(5)) then
 			step_cp+=1
@@ -1010,19 +1602,24 @@ function draw_fail_cp(i)
 			menu_nxt='play'
 			menu_end_arrow_pos=87
 		end
-	end	
+	end
 
 	if (btnp(5)) then
+		clean_up_salads()
+		color_blind=false
+		switch_control=false
+		switch_control_p2=false
+		player_dead=0
+		countdown=dfcd
+		health=8
 		if(menu_nxt=='play') then
-			clean_up_salads()
-			init_stage(i)
-			player_dead=0
+			step_cp=i-1
+			--draw_explanation(i-3)
+			draw_game_cp(i)
 		else
 			sfx(-1)
 			music(0)
 			--disallow gameover
-			countdown=dfcd
-			clean_up_salads()
 			--reinit all campaign
 			step_cp=df_step
 			game_state=game_states.start
@@ -1042,6 +1639,11 @@ end
 --happen once
 function init_stage(i)
 
+	x=original_x
+	y=original_y
+
+
+	clear_bave()
 	clean_up_salads()
 
 	list_salads=campaign[i]
@@ -1053,13 +1655,16 @@ function init_stage(i)
 	else
 		speed=g_speed
 	end
-	health=8
 	hexacountdown=countdown*60
 	hexacdorigin=countdown*60
 	sfx(-1)
 	init_music(campaign[i].musik)
 	--reset score
 	sc_p1=0
+
+	color_blind=false
+	switch_control=false
+	switch_control_p2=false
 	--stop loop
 	rdy_nxt=false
 end
@@ -1073,28 +1678,48 @@ function draw_game_cp(i)
 		draw_fail_cp(i)
 	else
 	
+		--set only when playing
+		menu_end_arrow_pos=87
+	
 		dying_framerate()
-		draw_bg_board()
+		draw_bg_board(
+			campaign[i].bg[1],
+			campaign[i].bg[2]
+		)
 
 		--countdown
 		goal=campaign[i].goal
 		print(sc_p1..'/'..campaign[i].goal,2,115,10)
 
+		life=0 while life<campaign[i].goal do
+			life+=1
+			if life<=sc_p1 then
+				rectfill(19+(life*2),114,19+(life*2),119,10)
+			else
+				rect(19+(life*2),114,19+(life*2),119,6)
+			end
+		end
+
+		--title
+		print(campaign[i].ttl,108,114,5)
+
 		--init for each starting game during campaign
 		if	(rdy_nxt==true) then
 			init_stage(i)
 		end
-	
+
 		move_commands()
 		init_anim_sprite()
-	
+
+		draw_bave()
+
 		draw_salads()
 		spr(sprindex,x,y,1,1,direction<0)
 
 		draw_cd()
-	
+
 		touch_salad()
-	
+
 	--condition if game is active
 	end
 
@@ -1104,8 +1729,17 @@ function draw_campaign()
 	--if explanations
 
 	if(campaign[step_cp].tp=='explanation')then
+		health=8
 		draw_explanation(step_cp)
 	--else draw boardgame
+	elseif(campaign[step_cp].tp=='end')then
+			sfx(-1)
+			music(0)
+			clean_up_salads()
+			color_blind=false
+			switch_control=false
+			step_cp=df_step
+			game_state=game_states.start
 	else
 		draw_game_cp(step_cp)
 	end
@@ -1114,9 +1748,9 @@ end
 
 function draw_cd()
 	print(countdown..'s',2,123,7)
-	
+
 	hexacountdown=countdown*60
-	
+
 	percentsmall=hexacountdown/(hexacdorigin)
 	percent=percentsmall*100
 
@@ -1134,7 +1768,7 @@ function draw_cd()
 	if(percent<10) then
 		kolor=8
 	end
-	
+
 	rectfill(14,123, 14+percent, 145, kolor)
 
 end
@@ -1194,7 +1828,7 @@ function draw_end_menu()
 			menu_nxt='play'
 			menu_end_arrow_pos=97
 		end
-	end	
+	end
 
 	if (btnp(5)) then
 		if(menu_nxt=='play') then
@@ -1211,13 +1845,19 @@ function draw_end_menu()
 end
 
 function draw_gameover()
-	--if two players, probalby there is one winner
 
+	--if two players, probalby there is one winner
 	if nb_player==1 then
-		game_state=game_states.win			
+		game_state=game_states.win
 	end
 	spr(38,36,51,6,2)
-	
+
+	if(countdown<0)then
+		print('time out',45,65,7)
+	else
+		print('you explode!',37,65,7)	
+	end
+
 	draw_end_menu()
 
 end
@@ -1232,11 +1872,18 @@ function draw_start()
 	rectfill(0,30,128,50,11)
 	rectfill(0,50,128,128,6)
 
+	map(0,0,0,30,16,1)
+	map(0,3,28,-4,1,3)
+
 	spr(1,20,20,1,1,direction<0)
+	spr(44,30,26,1,1,false,false)
 	spr(19,60,17,1,1)
 	spr(19,100,22,1,1)
 	spr(20,90,19,1,1)
-	spr(21,117,18,1,1)
+	spr(48,55,28,1,1)
+	spr(32,110,24,1,1)
+	spr(21,77,34,1,1)
+
 	--earth
 	rectfill(5,60,122,160,4)
 
@@ -1308,12 +1955,27 @@ function sort_winner()
 end
 
 function draw_win()
-	
+
 	-- black background
 	rectfill(0,0,128,128,0)
-	
+
 	sort_winner()
+
+	if nb_player==1 then
+		print('player 1',22,2,6)
+		print(sc_p1,58,2,10)
+		print('|',65,2,7)
+		print(sc_p2,70,2,2)
+		print('player 2',80,2,6)
+	else
+		--solo player
+		print('time: in '..victory_time..'s',40,83,7)
+		if (victory_best!=victory_time) then
+			print('your best is '..victory_best..'s',30,89,5)
+		end
+	end
 	
+
 	if winner==1 then
 			mssg_win='player 1 win!'
 			posx_mssg=40
@@ -1334,7 +1996,7 @@ function draw_win()
 		spr(64,28,40,9,4)
 		posx_mssg=36
 	end
-	
+
 	print(mssg_win,posx_mssg,75,11)
 
 	draw_end_menu()
@@ -1358,43 +2020,43 @@ function _draw()
 	if game_state==game_states.win then
 		draw_win()
 	end
-	print(dbg,0,0,2)
+	print(dbg,10,10,2)
 end
 
 
 __gfx__
-0000000000555000005550004444444400555000005550000bbbb600bbb00b0bbbb00bb00bbb0000bb000bbb0bbb0bbb00000000600000005611165000000000
-0000000006566500065665002222222206566500065665000b3333bb333b0b0b3330b33b0b33b00bb3b0bb3bbb3bb33b00000000760000006077706000000000
-0070070065656650757566502222222265656650757566500b00003bb0030bb30000b00b0b00300b30b0b303b303700b00000000776000006007006000000000
-0007700075755969656559692222222275755161656551610bbb00033b000bbb0000bbbb0bbbb00b00b0b000b000600b00000000777600006005006000000000
-0007700056556969565569692222222256556161565561610b33000003b60b3bb000b33b0b33b00b00b0b000b000b00b00000000777500006006006000000000
-0070070055665999556659f94444444455665121556651210b0000bb00bb0b03b0bbb00b0b00bb0bb0b0b000b000b00b00000000775000006007006000000000
-000000000559f191055f91914444444405512a1a05521a1a0bbbbb3bbb330b00bb33300bb3003b03bbb0bb0bbb0bb00bb0000000750000006077706000000000
-000000000f9f99f969f9f9f94444444402121121612121210333330333000300330000033000030033b03bbb376b3003bb00b000500000005777775000000000
-05550555005550000055500003330333011101110333033300000000000b30000000000000000bb000b00333053300003bbbb000500000000000000000000000
-55655565065665000656650033b333b311c111c133b333b300000000000b3000000000000000b33b00b000000000000003333000565000000000000000000000
-5666566665656650656546503bbb3bb31ccc1ccc3bbb3bbb0000000002267aa0000000000000b00300b000000000000000000000576500000000000000000000
-5666566675755969757559693bbb3bb31ccc1ccc3bbb3bbb00000000088769900000000000003b000b3000000000000000000000577650000000500000000000
-555755755655696956556469333733731117117133373373000000000001c00000000000000003bbb30000000000000000000000576500000005650000000000
-56515615556659f9554659f83b313b131c151c513b393b93000000000001c0000000000000000033300000000000000000000000565000000056765000000000
-556566550559f8980559f89833b3bb3311c1cc1133b3bb3300000000000000000000000000000000000000000000000000000000500000000067776000000000
-005555500f9f99f90f9889f900333330001111100033333000000000000000000000000000000000000000000000000000000000000000000555555500000000
+0000000000555000005550004444444400555000005550000bbbb60000000b0bbbb00000000000000000011101110bbb00000000600000005611165000000000
+0000000006566500065665002222222206566500065665000b3333b00bb00b0b33300bb00bbb0000bb000bbb0bbb033b00000000760000006077706000000000
+0070070065656650757566502222222265656650757566500b00003bb33b0bb30000b33b0b33b00bb3b0bb3bbb3bb00b0000000077600000600700600000f000
+0007700075755969656559692222222275755161656551610bbb00033b030bbb0000b00b0b00300b30b0b373b373b00b000000007776000060050060000faf00
+0007700056556969565569692222222256556161565561610b33000003b00b3bb000bbbb0bbbb00b00b0b711b117b00b00000000777500006006006000fa7af0
+0070070055665999556659f94444444455665121556651210b0000bb00b00b03b000b33b0b33bb0bb0b0b711b117b00b000000007750000060070060000faf00
+000000000559f191055f91914444444405512a1a05521a1a0b000b3bbb300b00bbbbb00bbb003b03bbb0bb7bbb7bb00bb000000075000000607770600000f000
+000000000f9f99f969f9f9f94444444402121121612121210bbbbb0333000300333330033b00030033b03bbb3bbb3003bb00b000500000005777775000000000
+05550555005550000055500003330333011101110333033303333300000b30000000000003000bb000b003b303b300003bbbb000500000000000000033333333
+55655565065665000656650033b333b311c111c133b333b300000000000b3000000000000000b33b00b000b303b00000033330005650000000000000b3b3b3b3
+5666566665656650656546503bbb3bb31ccc1ccc3bbb3bbb0000000002267aa0000000000000b00300b000b303b000000000000057650000000000003b3b3b3b
+5666566675755969757559693bbb3bb31ccc1ccc3bb1331300000000088769900000000000003b000b3000b303b00000000000005776500000005000bbbbbbbb
+555755755655696956556469333733731117117133171171000000000001c00000000000000003bbb300000000000000000000005765000000056500b3b3b3b3
+56515615556659f9554659f83b313b131c151c513b191191000000000001c00000000000000000333000000000000000000000005650000000567650bbbbbbbb
+556566550559f8980559f89833b3bb3311c1cc1133113311000000000000000000000000000000000000000000000000000000005000000000677760bbbbbbbb
+005555500f9f99f90f9889f90033333000111110003333300000000000000000000000000000000000000000000000000000000000000000055555553bbb3bbb
 09990999005550000000000000000000000000008000600800e80000000800080888000000088800000000000000000000555000005550000055500000000000
-99a999a90656650000000000000000000000000000080800088888088808808808ee0000008eee80000000000000000006566500065665000656650000000000
-9aaa9aaa656546500055500000000000000000006088888008eee80ee808e8e80800000008e000e8080008088808888065656650656546506565465000000000
-9aaa9aaa656558680556580800000000000000000080808e08000e00080808080888000008000008080008080008ee8075755161757551616565586800000000
-9997997958556869055568090055680800000000000ee0080808880888080e0808ee0000080000080e808e088808008056556161565564615855686100000000
-9a919a19585558f8585858f8085858f80000580808e0805008880808e8080008080000000800000800808008ee0888e055665121554651285855582800000000
-99a9aa990859f8985858f8980858f89808088888000e80500000080808080008080000000e80008e008880080008ee8005512b1b05512b1b08512b1b00000000
+99a999a90656650000000000000000000000000000080800088888088808808808ee0000008eee800000000000000000065665000656650006566500008808e0
+9aaa9aaa656546500055500000000000000000006088888008eee80ee808e8e80800000008e000e8080008088808888065656650656546506565465008888e7e
+9aaa9aaa656558680556580800000000000000000080808e08000e00080808080888000008000008080008080008ee80757551617575516165655868088888e8
+9997997958556869055568090055680800000000000ee0080808880888080e0808ee0000080000080e808e088808008056556161565564615855686100888880
+9a919a19585558f8585858f8085858f80000580808e0805008880808e8080008080000000800000800808008ee0888e055665121554651285855582800088800
+99a9aa990859f8985858f8980858f89808088888000e80500000080808080008080000000e80008e008880080008ee8005512b1b05512b1b08512b1b00008000
 00999990888888f8888888888888888088888888e888888808888e08880800080888000000e888e000e8e0088808008002121121021881218888882800000000
-02220222088808880999099906660666eeee0eeeeeeeeeee0eeee00eee0e000e0eee0000000eee00000e000eee0e00e000000000000000500000000000000000
-22d222d288e888e899f999f966766676ee00eeeeee0eee0e00000000000000000000000000000000000000000000000005000000050000000000000000000000
-2ddd2ddd8eee8eee9fff9fff67776777e00e0ee0ee0eee0e00000000000000000000000000000000000000000000000000555000000050000000000000000000
-2ddd2ddd8eee8eee9fff9fff67776777e0e0e0e0ee00ee0e00000000000000000000000000000000000000000000000005565808050000000000000000000000
-22272272888788789997997966666666e0e0e0e0ee00ee0e00000000000000000000000000000000000000000000000005556801005558080000000000000000
-2d21d2128e81e8189f90f90967686786e0e0e0e0ee00e0ee00000000000000000000000000000000000000000000000058585828085858280000000000000000
-22d2dd2288e8ee8899f9ff99667677660e00e0e00e00e00e00000000000000000000000000000000000000000000000058582b1b08582b1b0000000000000000
-002222200088888000999990006666600e00e0000e00e00000000000000000000000000000000000000000000000000088888888888888800000000000000000
+02220222088808880999099906660666eeee0eeeeeeeeeee0eeee00eee0e000e0eee0000000eee00000e000eee0e00e000000000000000500000000099000000
+22d222d288e888e899f999f966766676ee00eeeeee0eee0e00000000000000000000000000000000000000000000000005000000050000002222333399999900
+2ddd2ddd8eee8eee9fff9fff67776777e00e0ee0ee0eee0e00000000000000000000000000000000000000000000000000555000000050002002300399000099
+2ddd2ddd8eee8eee9fff9fff67776777e0e0e0e0ee00ee0e00000000000000000000000000000000000000000000000005565808050000002002300399999900
+22272272888788789997997966666666e0e0e0e0ee00ee0e00000000000000000000000000000000000000000000000005556801005558082002300399000000
+2d21d2128e81e8189f91f91967686786e0e0e0e0ee00e0ee00000000000000000000000000000000000000000000000058585828085858282002300399999900
+22d2dd2288e8ee8899f9ff99667677660e00e0e00e00e00e00000000000000000000000000000000000000000000000058582b1b08582b1b2002300399000099
+002222200088888000999990006666600e00e0000e00e00000000000000000000000000000000000000000000000000088888888888888800220033099999900
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006660000000000000
@@ -1409,7 +2071,7 @@ __gfx__
 08e008e088e8889900099900bb300b3000000000c100cc1000c10dd5000eee800e8000fa00000000077000007700770007707700007700700000000000000000
 ee0008888e08e09a999aa9bbbb300b3000000000c100cc1000c100d5000e8ee80e8000fa00000000077000077770777707777000007777700000000000000000
 e0000088e008e09aaaaa09a00b300b3000000000c100ccc100c100d5000e80ee8e8000fa00000000000000000000000000000000000000000000000000000000
-0000000ee008e09a000009a00b300b3000000000cc10c1cc10c100dd500e800eee8000f000000000000000000000000000000000000000000000000000000000
+0000000ee008e09a000009a00b300b3000000000cc10c1cc20c100dd500e800eee8000f000000000000000000000000000000000000000000000000000000000
 000000000008e099000009a00b3000b3000000000c10c10c10c1000ddd5e8000ee80000000000000000000000000000000000000000000000000000000000000
 000000000008e0a990009aa00bb300b3000000000ccc100cccc100000dde8000ee80000000000000000000000000000000000000000000000000000000000000
 000000000008e00a99999a0000b300b30000000000cc1000cc100000000000000e8000fa00000000000000000000000000000000000000000000000000000000
@@ -1460,10 +2122,10 @@ e0000088e008e09aaaaa09a00b300b3000000000c100ccc100c100d5000e80ee8e8000fa00000000
 0000000055566555555555565615566555555555555aaaaaa90000aaaaaa90000000000055566555555555565615566555555555555222222100002222221000
 000000000555665555555556565566615555556555aaaaaaa0000aaaaaaaa0000000000005556655555555565655666155555565552222222000022222222000
 000000000055566555555556665566515555566555aaaaaa9000aaaaaaaa90000000000000555665555555566655665155555665552222221000222222221000
-000000000005555555555556665565155555565555aaaaaa990aaaaaaa9900000000000000055555555555562655651555555655552222221102222222110000
-00000000000555556655556655555115555566555aaaaaaa999aaaaaaa9000000000000000055555665555662555511555556655522222221112222222100000
-00000000000055555666666556605555555665555aaaaaaaa99aaaaaa90000000000000000005555566666652660555555566555522222222112222221000000
-0000000000000555555555556605555555665555aaaaaaaaaaaaaaaa990000000000000000000555555555552605555555665555222222222222222211000000
+000000000005555555555556665565155555565555aaaaaa990aaaaaaa9900000000000000055555555555566655651555555655552222221102222222110000
+00000000000555556655556655555115555566555aaaaaaa999aaaaaaa9000000000000000055555665555665555511555556655522222221112222222100000
+00000000000055555666666556605555555665555aaaaaaaa99aaaaaa90000000000000000005555566666655660555555566555522222222112222221000000
+0000000000000555555555556605555555665555aaaaaaaaaaaaaaaa990000000000000000000555555555556605555555665555222222222222222211000000
 0000000000000056655555666a55665555655555aaaaaaaaaaaaaaa9900000000000000000000056655555662255665555655555222222222222222110000000
 00000000000000006666666aaa5556666665555aaaaaaaaaaaaaaaa9000000000000000000000000666666622255566666655552222222222222222100000000
 00000000000000000aaaaaaaaa556666655555aaaaaaaaaaaaaaa990000000000000000000000000022222222255666665555522222222222222111000000000
@@ -1475,11 +2137,11 @@ e0000088e008e09aaaaa09a00b300b3000000000c100ccc100c100d5000e80ee8e8000fa00000000
 0000000000aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa900000000000000000222222222222222222222222222222222222222ee2222222000000
 000000000aaaaaaaaaaaaaaaaaa77777aaaaaaaaaaaaaaaaaaaaaaaa90000000000000000222222222222222222eeeee222222222222222222ee222222100000
 0000000aaaaaaaaaaaaaaaaaaaaaaaa777aaaaaaaaaaaaaaaaaaaaaaa90000000000000222222222222222222222222eee22222222222222222e222222200000
-000000aaaaaaaaaaaaaa999999aaaaaaa77777aaa6999aaaaaaaaaaaaa900000000000222222222222221111212222222eeeee22201111122222222222221000
-0000aaaaaaaaaaaaa9999999999999aaaaaaaaa6669999999aaaaaaaaaaaa0000000222222222222211111112111112222222220001111111222222222222000
-000099999aaaaaaa6999999999999999aaaaa66699999999999aaaaaa99990000000111112222222011111112111111122222000111111111112222221111000
-00000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000
-00000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000
+000000aaaaaaaaaaaaaa999999aaaaaaa77777aaa6999aaaaaaaaaaaaa900000000000222222222222221111112222222eeeee22201111122222222222221000
+0000aaaaaaaaaaaaa9999999999999aaaaaaaaa6669999999aaaaaaaaaaaa0000000222222222222211111111111112222222220001111111222222222222000
+000099999aaaaaaa6999999999999999aaaaa66699999999999aaaaaa99990000000111112222222011111111111111122222000111111111112222221111000
+00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
@@ -1495,15 +2157,15 @@ __gff__
 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ff0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 __map__
-0303030303030303030303030303030300000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-0303030303030303030303030303030300000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-0303030303030303030303030303030300000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-0303030303030303030303030303030300000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-0303030303030303030303030303030300000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-0303030303030303030303030303030300000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-0303030303030303030303030303030300000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-0303030303030303030303030303030300000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-0303030303030303030303030303030300000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+3f6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+3f6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+3f6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 0303030303030303030303030303030300000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 0303030303030303030303030303030300000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 0303030303030303030303030303030300000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
@@ -1528,7 +2190,7 @@ __map__
 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 __sfx__
-010100001e050200512105125051290502a0512b0512b0512b0502b0512b0512b0510100004601046010360101600006010b6010a60109600086010560106601046000360103601026010b600076010860108601
+000100001e050200512105125051290502a0512b0512b0512b0502b0512b0512b0510100004601046010360101600006010b6010a60109600086010560106601046000360103601026010b600076010860108601
 000201000835010350163501d3502135025350293502d35032350353503a3503f35037350303502b35028350243501e3501a352133500e3500935004350313001530012300103000e3000c300093000130006300
 0010001e000520c4020105201052054000005201052100000e0520e00003052030520e2000e05203052062000e0520e0000105201052202000c05203052102000c0520b20003052030521b4000c0520100204002
 0010001e00152055020115201152054000015201152100000e1520e00003152031520b2000e15203152062000e152062000115201152202000c15203152023000c1520b20003152031520b2000c1520720006200
@@ -1537,7 +2199,7 @@ __sfx__
 000200000d5500f550125501a55021550253502f550335503655038550395503a5503735035550325502e55026350175500955003550023500000000000000000000000000000000000000000000000000000000
 000200003d65032650396503b6503c6503a6502e650266501e65019650136500f6500b65005650026500155001100137500000000000000000000000000000000000000000000000000000000000000000000000
 0010001f087501f4502a75026550194501f750097500b4501a75006750134501d5501e7501e3500675004750017501c0501f75006750027500175016550195501e750077500375018550195502a7502a35000000
-0007000000000396503865037650363503565035350346503265031350316502f3502e6502d6502b65029350273502665024350226501e3501d650196501765012350106500c6500835003650000000000000000
+00070000181501a6503865037650363503565035350346503265031350316502f3502e6502d6502b65029350273502665024350226501e3501d650196501765012350106500c6500835003650000000000000000
 000f00201175013750147501775016750147501775018750197501a7501a7501a7501c7501c7501c7501c7501c7501c7501b7501a750177501475011750107500e7500f7500f7500f7500f75010750177501a750
 000d001c0b1500a1500a150027500000003150031500675000000071500715007150057500815008150081500a7500d1500d1500d15000000081500815007750000000b1500a1500b15000000000000000000000
 000c00201f4501c050233502335024350233502335022350213501f3501d350193501635013350103500e3500c3500b350090500a050243500b050243500a050233500b050233500b050194500b050254500b350
@@ -1546,14 +2208,14 @@ __sfx__
 000c0020165501b4501e250155501a4501e2501e250194501e2501d2501045014250142500c750092500925008250044500d7500a75006750122500d150122500c150132500d5500d5500b550095500755005550
 000100003835034350303502b35025350223501d350153500f3500c3500835006350043500335002350023500235003350083500d350123501b35025350343503f35000000000000000000000000000000000000
 0001000024250282502c25031250362503b250332500c2500425007250122501b2502125028250312503b2503f2503a2502a2501b250112500b2500525009250112501a2501d250252502d250392503b25000000
-001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+001000201a15018150181501715018150173500d3500b3500d35011150152501925019250142501425014150163501435018350181501f1501d1501c1501a15018150197501c15018150187501f1501d1501c150
+00100020180530f050180530f050187501a7501c7501f3001f7502175023750253002475023750217501d750217501d700217501d7502175000000187501a7501c75000000217501d75021750000000d0500d050
+00160020210501b050210501c050220501d0502605026250282502a2502a150281502515021150211502215022150211501b0501a2501c2501e2501e1501c150191501515015150161501505015150130501a050
+000a0020193501935019150191502a7502c3502c3502c3502b1502b1502a7501a350183501815017750267502735027350261502615024750193501a3501b1501b750287502d3502e3502e3502d3502815022150
+000c00201a1501a15019150191501915018150173501725017350181501a1501c1501e150201502115022250232502415024150231501c1501535015250153501525015350152501535015350183501c15021150
+0010001f0a1500e150161501a15011350071500a1500e1501115014150171501f350081500a1500d15010150111501a350133500f150183501315013150171501a1501b3500c1500f15012350121501015000000
+000100001735017350173501735017350353503835038350373503735037350363503635004350043500435005350053500535004300043000430004300043000330003300033000330003300033000430004300
+0010001f1855018550185501855018550195501c5501f550205501f5501c55019550155500f5500d5500f550125501455017550195501955018550165501555016550195501a5501c5501e5501e5501d55011100
 001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
