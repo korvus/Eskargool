@@ -94,8 +94,8 @@ campaign={
 		tp='explanation',
 		txt={
 			{'welcome to eskargool!',15,22,7},
-			{'all you need for play is',15,34,7},
-			{'directional controls.',15,40,7}
+			{'all you need to play are',15,34,7},
+			{'the directional controls.',15,40,7}
 		},
 		pics={
 			{1,60,75,1,1,true,false},
@@ -108,9 +108,9 @@ campaign={
 	{
 		tp='explanation',
 		txt={
-			{'your first aim is to eat',10,13,7},
+			{'your aim is to eat',10,13,7},
 			{'green and healthy salads!',10,19,7},
-			{'just be carreful, there',10,60,7},
+			{'just be careful, there',10,60,7},
 			{'is a countdown!',10,66,7},
 			{'countdown',14,104,7},
 			{'2/10',13,83,10},
@@ -155,13 +155,13 @@ campaign={
 	{
 		tp='explanation',
 		txt={
-			{'congratulation,',15,15,7},
-			{'that one was easy!',15,21,7},
+			{'congratulations,',15,15,7},
+			{'that was easy!',15,21,7},
 			{'but did you notice how',15,27,7},
-			{'slow is your snail?',15,33,7},
-			{'that\'s why there is blue',15,70,12},
+			{'slow your snail is?',15,33,7},
+			{'that\'s why there are blue',15,70,12},
 			{'salads!',15,76,12},
-			{'blue salad improve your',15,87,7},
+			{'blue salads increase your',15,87,7},
 			{'speed but not points.',15,93,7},
 			{'let\'s try!',80,103,7},
 		},
@@ -202,13 +202,13 @@ campaign={
 		tp='explanation',
 		txt={
 			{'well done!',10,10,7},
-			{'let start something more',10,16,7},
+			{'let\'s start something more',10,16,7},
 			{'difficult now!',10,22,7},
-			{'orange eyes salads!',10,64,9},
-			{'this salad kill you...',10,80,7},
-			{'and slow down your snail...',10,86,7},
+			{'orange salads with eyes!',10,64,9},
+			{'this salad kills you...',10,80,7},
+			{'and slows your snail down...',10,86,7},
 			{'but...',10,92,7},
-			{'allow to gain two points!',10,98,7}
+			{'allows you to gain two points!',10,98,7}
 		},
 		pics={
 			{21,20,35,1,1,false,false},
@@ -248,12 +248,12 @@ campaign={
 		tp='explanation',
 		txt={
 			{'great!',10,10,7},
-			{'maybe you notice you have',10,16,7},
-			{'some time before be',10,22,7},
+			{'maybe you noticed you have',10,16,7},
+			{'some time before being',10,22,7},
 			{'clinically dead?',10,28,7},
 			{'the good news is',10,40,7},
-			{'you can pick some blue',10,46,7},
-			{'salads to heal!',10,52,7},
+			{'you can pick a blue',10,46,7},
+			{'salad to heal!',10,52,7},
 			{'+',42,71,7},
 			{'+',42,91,7},
 		},
@@ -290,8 +290,8 @@ campaign={
 	{
 		tp='explanation',
 		txt={
-			{'ok, you know the basis.',13,20,7},
-			{'let mix the three type',13,26,7},
+			{'ok, you know the basics.',13,20,7},
+			{'let\'s mix the three types',13,26,7},
 			{'of salad on one board now!',13,32,7},
 		},
 		pics={
@@ -326,7 +326,7 @@ campaign={
 			{'let\'s continue with',31,20,7},
 			{'a new salad!',31,26,7},
 			{'the orange salad!',31,42,10},
-			{'this one give you',31,90,7},
+			{'this one gives you',31,90,7},
 			{'some extra time!',31,96,7},
 			{'+',42,67,10},
 			{'+',95,67,10},
@@ -361,17 +361,17 @@ campaign={
 	{
 		tp='explanation',
 		txt={
-			{'each bonus have',31,15,7},
+			{'each bonus has',31,15,7},
 			{'its nemesis!',31,21,7},
 			{'this red salad',31,35,7},
-			{'remove time!',31,41,7},
+			{'removes time!',31,41,7},
 			{'+',42,57,0},
 			{'-',95,57,0},
 			{'-',100,57,0},
 			{'but there is',31,75,7},
 			{'an extra power',31,81,7},
 			{'with this salad...',31,87,7},
-			{'it give a lot',31,93,7},
+			{'it gives a lot',31,93,7},
 			{'of speed!',31,99,7}
 		},
 		pics={
@@ -403,7 +403,7 @@ campaign={
 	{
 		tp='explanation',
 		txt={
-			{'you master!',21,20,7},
+			{'you\'re getting the hang of this!',21,20,7},
 			{'this time, no help!',21,26,7},
 			{'try to guess what',21,84,7},
 			{'the purple salad does!',21,90,7},
@@ -446,13 +446,13 @@ campaign={
 	{
 		tp='explanation',
 		txt={
-			{'adventure continue!',31,15,7},
+			{'adventure continues!',31,15,7},
 			{'another strange',31,21,7},
-			{'salad appear',31,27,7},
+			{'salad appears',31,27,7},
 			{'in the garden...',31,33,7},
 			{'+',42,57,0},
 			{'?',95,57,0},
-			{'it smell good',31,75,7},
+			{'it smells good',31,75,7},
 			{'so that must',31,81,7},
 			{'give some',31,87,7},
 			{'points... but',31,93,7},
@@ -487,17 +487,17 @@ campaign={
 	{
 		tp='explanation',
 		txt={
-			{'you allmost reach',21,15,0},
+			{'you\'ve almost reached',21,15,0},
 			{'the mysterious golden',21,21,0},
 			{'salad!',21,27,0},
 			{'but before there is',21,35,0},
 			{'a strange white salad...',21,41,0},
 			{'+',32,57,0},
 			{'+',95,57,0},
-			{'it give you some extra',21,75,0},
+			{'it gives you some extra',21,75,0},
 			{'points but also some',21,81,0},
 			{'extra speed!',21,87,0},
-			{'but it is maybe',21,95,0},
+			{'but it is possibly',21,95,0},
 			{'dangerous!',21,101,0},
 		},
 		pics={
@@ -532,8 +532,8 @@ campaign={
 		txt={
 			{'before the last round',21,15,7},
 			{'with the famous,',21,21,7},
-			{'golden salad, let do',21,27,7},
-			{'a last training',21,33,7},
+			{'golden salad, let\'s do',21,27,7},
+			{'a last training session',21,33,7},
 			{'',21,41,0},
 		},
 		pics={
@@ -570,7 +570,7 @@ campaign={
 		tp='explanation',
 		txt={
 			{'you finally get it!',21,15,9},
-			{'it smell delicious,',21,21,9},
+			{'it smells delicious,',21,21,9},
 			{'the golden salad is',21,27,9},
 			{'there!',21,33,9},
 			{'',21,41,0},
@@ -581,7 +581,7 @@ campaign={
 			{15,70,70,1,1},
 			{15,80,75,1,1},
 			{15,80,45,1,1},
-			{15,40,80,1,1},	
+			{15,40,80,1,1},
 		}
 	},
 	{
@@ -607,10 +607,10 @@ campaign={
 		tp='explanation',
 		txt={
 			{'you know all the',20,41,7},
-			{'secrets! keep hard',20,48,7},
-			{'training, a perfect',20,55,7},
+			{'secrets! keep training',20,48,7},
+			{'hard, a perfect',20,55,7},
 			{'control of eskargool',20,62,7},
-			{'is an infinite work!',20,69,7},
+			{'is the work of a lifetime!',20,69,7},
 		},
 		pics={
 			{64,26,10,10,4},
@@ -681,9 +681,9 @@ function add_salad(stype)
 		pos_alea=get_rand_position()
 
 		add(salads, {
-	 	pos_alea[1],
-	 	pos_alea[2],
-	 	saladsprite[stype]
+		pos_alea[1],
+		pos_alea[2],
+		saladsprite[stype]
 		})
 	end
 
@@ -829,7 +829,7 @@ function move_commands()
 		if (btn(0,0)) d=speed
 		if (btn(1,0)) d=-speed
 		if (btn(2,0)) move('p1',0,speed)
-		if (btn(3,0)) move('p1',0,-speed)	
+		if (btn(3,0)) move('p1',0,-speed)
 	end
 
 	--move player2
@@ -1043,7 +1043,7 @@ function collision_p1(salads, salad)
 				event_eat_7()
 				sc_p1+=1
 			end
-			
+
 			if salad[3][1]==8 then
 				del(salads,salad)
 				event_eat_8()
@@ -1167,21 +1167,21 @@ function touch_salad()
 	 --collision player 1
 	 local collision =	collision_check(
 		 x,
-	 	y,
-	 	salad[1],
-	 	salad[2]
+		y,
+		salad[1],
+		salad[2]
 	 )
 	 if collision then
-	 	collision_p1(salads, salad)
+		collision_p1(salads, salad)
 	 end
 
 		--collision player 2
 		if(nb_player==1) then
-	 	local collision_bool =	collision_check(
+		local collision_bool =	collision_check(
 			x_p2,
-	 		y_p2,
-	 		salad[1],
-	 		salad[2]
+			y_p2,
+			salad[1],
+			salad[2]
 		 )
 
 		 if collision_bool then
@@ -1201,15 +1201,15 @@ function draw_salads()
 			sprite_number=salad[3][2]
 		end
 		--golden salad moving
-		
+
 		if salad[3][1]==9 then
-		
+
 			gs_direction_tick+=1
 			if(gs_direction_tick>80) then
 				direction_gs=flr(rnd(8))
 				gs_direction_tick=0
 			end
-			
+
 			if (direction_gs==0) then
 				--boost countdown
 				gs_direction_tick+=2
@@ -1234,15 +1234,15 @@ function draw_salads()
 				salad[1]-=speed_gs
 				salad[2]+=speed_gs
 			end
-			
+
 			if salad[1]<0 then salad[1]=120 end
 			if salad[1]>120 then salad[1]=0 end
 			if salad[2]>105 then salad[2]=0 end
 			if salad[2]<0 then salad[2]=105 end
-						
+
 		end
-		
-		spr(sprite_number, salad[1], salad[2])		
+
+		spr(sprite_number, salad[1], salad[2])
 	end
 end
 
@@ -1411,7 +1411,7 @@ function draw_bave()
 		end
 		for particle_p2 in all(bave_p2) do
 	  pset(particle_p2[1],particle_p2[2],particle_p2[3])
-		end		
+		end
 	end
 
 end
@@ -1445,7 +1445,7 @@ function draw_game()
 
 	spr(sprindex,x,y,1,1,direction<0)
 	print(sc_p1..'/10',2,115,10)
-	
+
 	--square life
 	life=0 while life<10 do
 		life+=1
@@ -1460,7 +1460,7 @@ function draw_game()
 	if(nb_player==1) then
 		spr(sprindex_p2,x_p2,y_p2,1,1,direction_p2<0)
 		print(sc_p2..'/10',110,115,2)
-		
+
 		--square life
 		life_p2=0 while life_p2<10 do
 			life_p2+=1
@@ -1530,7 +1530,7 @@ function specificities_cp(i)
 
 	if(i==26) then
 		rectfill(10,111,120,120,11)
-		
+
 		print3d('return to home with (x)',20,113,6,7)
 		line(20,120,110,120,7)
 	end
@@ -1677,10 +1677,10 @@ function draw_game_cp(i)
 	if (player_dead==1 or deadback=='game_end' ) then
 		draw_fail_cp(i)
 	else
-	
+
 		--set only when playing
 		menu_end_arrow_pos=87
-	
+
 		dying_framerate()
 		draw_bg_board(
 			campaign[i].bg[1],
@@ -1855,7 +1855,7 @@ function draw_gameover()
 	if(countdown<0)then
 		print('time out',45,65,7)
 	else
-		print('you explode!',37,65,7)	
+		print('you explode!',37,65,7)
 	end
 
 	draw_end_menu()
@@ -1974,7 +1974,7 @@ function draw_win()
 			print('your best is '..victory_best..'s',30,89,5)
 		end
 	end
-	
+
 
 	if winner==1 then
 			mssg_win='player 1 win!'
