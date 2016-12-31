@@ -114,7 +114,7 @@ campaign={
 			{'is a countdown!',10,66,7},
 			{'countdown',14,104,7},
 			{'2/10',13,83,10},
-			{'18s',13,92,7},
+			{'18 s.',13,92,7},
 			{'salads eat',37,83,7}
 		},
 		pics={
@@ -208,7 +208,8 @@ campaign={
 			{'this salad kills you...',10,80,7},
 			{'and slows your snail down...',10,86,7},
 			{'but...',10,92,7},
-			{'allows you to gain two points!',10,98,7}
+			{'allows you to gain',10,98,7},
+			{'two points!',10,104,7}
 		},
 		pics={
 			{21,20,35,1,1,false,false},
@@ -606,11 +607,11 @@ campaign={
 	{
 		tp='explanation',
 		txt={
-			{'you know all the',20,41,7},
-			{'secrets! keep training',20,48,7},
-			{'hard, a perfect',20,55,7},
-			{'control of eskargool',20,62,7},
-			{'is the work of a lifetime!',20,69,7},
+			{'you know all the',15,41,7},
+			{'secrets! keep training',15,48,7},
+			{'hard, a perfect',15,55,7},
+			{'control of eskargool',15,62,7},
+			{'is the work of a lifetime!',15,69,7},
 		},
 		pics={
 			{64,26,10,10,4},
@@ -791,7 +792,13 @@ function dying_framerate()
 			if health==0 then
 				player_dead=1
 				sfx(-1)
-				sfx(4)
+				countdown=0
+				--if 2 players, even if death arrive, win music at the end
+				if (nb_player==1) then
+					sfx(4)
+				else
+					sfx(9)
+				end
 				return 'died'
 			end
 		end
@@ -874,6 +881,7 @@ function c_down()
 				sfx(-1)
 				sfx(4)
 			else
+				--dead
 				music(-1)
 				sfx(-1)
 				sfx(9)
@@ -1497,7 +1505,7 @@ function specificities_cp(i)
 	if (i==2) then
 		rectfill(10,30,118,50,4)
 		rectfill(10,79,118,100,0)
-		rectfill(25,92,100,96,11)
+		rectfill(35,92,100,96,11)
 	end
 
 	if(i==4) then
@@ -1614,14 +1622,14 @@ function draw_fail_cp(i)
 		health=8
 		if(menu_nxt=='play') then
 			step_cp=i-1
-			--draw_explanation(i-3)
+			--draw_egxplanation(i-3)
 			draw_game_cp(i)
 		else
 			sfx(-1)
 			music(0)
 			--disallow gameover
 			--reinit all campaign
-			step_cp=df_step
+			step_cp=step_cp-1
 			game_state=game_states.start
 		end
 	end
@@ -1675,6 +1683,7 @@ function draw_game_cp(i)
 	sprindex=draw_eskargool(sprindex)
 	deadback=c_down()
 	if (player_dead==1 or deadback=='game_end' ) then
+		--rdy_nxt=false
 		draw_fail_cp(i)
 	else
 
@@ -1747,7 +1756,7 @@ function draw_campaign()
 end
 
 function draw_cd()
-	print(countdown..'s',2,123,7)
+	print(countdown..' s.',2,123,7)
 
 	hexacountdown=countdown*60
 
@@ -1769,7 +1778,7 @@ function draw_cd()
 		kolor=8
 	end
 
-	rectfill(14,123, 14+percent, 145, kolor)
+	rectfill(22,123, 14+percent, 145, kolor)
 
 end
 
@@ -1908,7 +1917,7 @@ function action_menu()
 		nb_player-=1
 	end
 	if(nb_player<-1) then
-		nb_player=-1
+		nb_player=1
 	end
 end
 
@@ -1969,9 +1978,9 @@ function draw_win()
 		print('player 2',80,2,6)
 	else
 		--solo player
-		print('time: in '..victory_time..'s',40,83,7)
+		print('time: in '..victory_time..' s',40,83,7)
 		if (victory_best!=victory_time) then
-			print('your best is '..victory_best..'s',30,89,5)
+			print('your best is '..victory_best..' s',30,89,5)
 		end
 	end
 
